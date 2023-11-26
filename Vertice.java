@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Vertice {
@@ -7,11 +8,7 @@ public class Vertice {
 
     public Vertice(String conteudo) {
         this.conteudo = conteudo;
-    }
-
-    public Vertice(String conteudo, List<Aresta> arestas) {
-        this.conteudo = conteudo;
-        this.arestas = arestas;
+        this.arestas = new ArrayList<Aresta>();
     }
 
     public int getId() {
@@ -32,5 +29,21 @@ public class Vertice {
 
     public void setArestas(List<Aresta> arestas) {
         this.arestas = arestas;
+    }
+
+    public void addAresta(Aresta aresta) {
+        this.arestas.add(aresta);
+    }
+
+    public void removeAresta(Aresta aresta) {
+        this.arestas.remove(aresta);
+    }
+
+    public List<Vertice> getAdjacentes() {
+        List<Vertice> adjacentes = new ArrayList<Vertice>();
+        for (int i = 0; i < this.arestas.size(); i++) {
+            adjacentes.add(this.arestas.get(i).getOposto(this));
+        }
+        return adjacentes;
     }
 }

@@ -58,4 +58,11 @@ public class Aresta {
         return (this.a.equals(v) && this.b.equals(w)) || (this.a.equals(w) && this.b.equals(v));
     }
 
+    public Vertice getOposto(Vertice v) {
+        if (a == v)
+            return b;
+        else
+            return a;
+    }
+
 }

@@ -49,25 +49,37 @@ public class Grafo implements IGrafo {
         if (!vertices.contains(v)) {
             System.out.println("Vértice de valor " + v.getConteudo()
                     + " não está presente no grafo. Adicionando vértice à lista de vértices.");
+            this.vertices.add(v);
         }
 
         if (!vertices.contains(w)) {
             System.out.println("Vértice de valor " + w.getConteudo()
                     + " não está presente no grafo. Adicionando vértice à lista de vértices.");
+            this.vertices.add(w);
         }
 
         Aresta nova = new Aresta(v, w, o);
         this.arestas.add(nova);
-
+        v.addAresta(nova);
+        w.addAresta(nova);
         return nova;
     }
 
-    public int removeVertice(Vertice v) {
-        throw new UnsupportedOperationException("Unimplemented method 'removeVertice'");
+    public String removeVertice(Vertice v) {
+        List<Aresta> arestas = v.getArestas();
+        for (Aresta a : arestas) {
+            Vertice oposto = a.getOposto(v);
+            oposto.removeAresta(a);
+            this.arestas.remove(a);
+        }
+        return v.getConteudo();
     }
 
     public int removeAresta(Aresta e) {
-        throw new UnsupportedOperationException("Unimplemented method 'removeAresta'");
+        e.getA().removeAresta(e);
+        e.getB().removeAresta(e);
+        this.arestas.remove(e);
+        return e.getValor();
     }
 
     public List<Aresta> arestasIncidentes(Vertice v) {

@@ -15,7 +15,7 @@ interface IGrafo {
 
     Aresta inserirAresta(Vertice v, Vertice w, int o);
 
-    int removeVertice(Vertice v);
+    String removeVertice(Vertice v);
 
     int removeAresta(Aresta e);
 
