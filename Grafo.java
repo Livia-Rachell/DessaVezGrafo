@@ -40,8 +40,10 @@ public class Grafo implements IGrafo {
         e.setValor(w);
     }
 
-    public void inserirVertice(String o) {
-        this.vertices.add(new Vertice(o));
+    public Vertice inserirVertice(String o) {
+        Vertice vertice = new Vertice(o);
+        this.vertices.add(vertice);
+        return vertice;
     }
 
     public Aresta inserirAresta(Vertice v, Vertice w, int o) {

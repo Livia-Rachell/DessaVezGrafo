@@ -11,7 +11,7 @@ interface IGrafo {
 
     void substituir(Aresta e, int w);
 
-    void inserirVertice(String o);
+    Vertice inserirVertice(String o);
 
     Aresta inserirAresta(Vertice v, Vertice w, int o);
 

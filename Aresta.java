@@ -50,10 +50,6 @@ public class Aresta {
         this.direcionada = d;
     }
 
-    /*
-     * Método auxiliar que verifica se conecta os dois vertices recebidos como
-     * parametro
-     */
     public boolean conecta(Vertice v, Vertice w) {
         return (this.a.equals(v) && this.b.equals(w)) || (this.a.equals(w) && this.b.equals(v));
     }
