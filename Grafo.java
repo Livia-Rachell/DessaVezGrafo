@@ -107,4 +107,24 @@ public class Grafo implements IGrafo {
         return a;
     }
 
+    public void imprimirConexoes() {
+        for (Vertice vertice : vertices) {
+            List<Vertice> adjacentes = vertice.getAdjacentes();
+
+            System.out.print("Vertice de índice " + vertices.indexOf(vertice) + " (" + vertice.getConteudo()
+                    + ") está conectada com vertices [");
+
+            for (int i = 0; i < adjacentes.size(); i++) {
+                Vertice adjacente = adjacentes.get(i);
+                System.out.print(vertices.indexOf(adjacente) + " (" + adjacente.getConteudo() + ")");
+
+                if (i < adjacentes.size() - 1) {
+                    System.out.print(", ");
+                }
+            }
+
+            System.out.println("]");
+        }
+    }
+
 }

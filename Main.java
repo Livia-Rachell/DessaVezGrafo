@@ -6,5 +6,7 @@ public class Main {
         Labirinto labirinto = new Labirinto();
         labirinto.lerLabirinto("labirinto.txt");
 
+        labirinto.getGrafo().imprimirConexoes();
+
     }
 }
