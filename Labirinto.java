@@ -98,6 +98,10 @@ public class Labirinto {
             Vertice atual = filaDePrioridade.poll();
 
             if (!atual.isVisitado()) {
+                if (atual.equals(saidas.get(0))) {
+                    // Chegou ao destino
+                    break;
+                }
                 atual.setVisitado(true);
 
                 for (Aresta aresta : grafo.arestasIncidentes(atual)) {
@@ -121,7 +125,7 @@ public class Labirinto {
      * existente.
      * 
      * Para esse exemplo foi sempre usada a primeira saída na busca linear
-     * do arquivo labirinto.txt
+     * do arquivo labirinto.txt para manter a comparação de ambos algorítmos justa
      */
     public void aEstrela() {
         for (Vertice vertice : vertices) {
