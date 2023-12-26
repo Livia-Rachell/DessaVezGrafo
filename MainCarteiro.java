@@ -19,7 +19,7 @@ public class MainCarteiro {
 
         try {
             CarteiroChines carteiroChines = new CarteiroChines(grafo);
-            grafo.imprimirConexoes();
+            carteiroChines.resolucao();
         } catch (Exception error) {
             error.printStackTrace();
         }

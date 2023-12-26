@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
@@ -7,12 +6,11 @@ import java.util.Stack;
 public class CarteiroChines {
     private Grafo grafoCarteiro;
 
-    public CarteiroChines(Grafo grafo) throws Exception {
+    public CarteiroChines(Grafo grafo) {
         this.grafoCarteiro = grafo;
-        resolucao(grafoCarteiro);
     }
 
-    private void resolucao(Grafo grafoCarteiro) throws Exception {
+    public void resolucao() throws Exception {
         List<Vertice> verticesImpares = new ArrayList<Vertice>(verticesImpares(grafoCarteiro));
         if (verticesImpares.size() % 2 == 0) {
             eulerizar(grafoCarteiro, verticesImpares);
@@ -42,7 +40,7 @@ public class CarteiroChines {
     private void eulerizar(Grafo grafoCarteiro, List<Vertice> verticesImpares) {
         while (!verticesImpares.isEmpty()) {
             int distancias[][] = matrizDistancias(grafoCarteiro, verticesImpares);
-            verticesImpares = emparelhamentoPerfeiro(distancias, verticesImpares);
+            caminhoArtificial(distancias, grafoCarteiro, verticesImpares);
         }
     }
 
@@ -59,7 +57,7 @@ public class CarteiroChines {
         return distancias;
     }
 
-    private List<Vertice> emparelhamentoPerfeiro(int[][] distancias, List<Vertice> verticesImpares) {
+    private List<Vertice> caminhoArtificial(int[][] distancias, Grafo grafoAuxiliar, List<Vertice> verticesImpares) {
         int menorCaminho = Integer.MAX_VALUE;
         Vertice v1 = null;
         Vertice v2 = null;
@@ -73,7 +71,13 @@ public class CarteiroChines {
                 }
             }
         }
-        grafoCarteiro.inserirAresta(v1, v2, menorCaminho);
+        grafoAuxiliar.dijkstra(v1, v2);
+        List<Vertice> caminho = new ArrayList<Vertice>(grafoAuxiliar.getCaminho(v2));
+        Collections.reverse(caminho);
+        for (int i = 0; i < caminho.size() - 1; i++) {
+            int valor = caminho.get(i).getArestaDoOposto(caminho.get(i + 1)).getValor();
+            grafoAuxiliar.inserirAresta(caminho.get(i), caminho.get(i + 1), valor);
+        }
         verticesImpares.remove(v1);
         verticesImpares.remove(v2);
         return verticesImpares;
