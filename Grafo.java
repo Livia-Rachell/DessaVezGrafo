@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class Grafo implements IGrafo {
     private List<Vertice> vertices;
@@ -125,6 +127,62 @@ public class Grafo implements IGrafo {
 
             System.out.println("]");
         }
+    }
+
+    public void dijkstra(Vertice inicio, Vertice fim) {
+        for (Vertice vertice : vertices) {
+            vertice.setVisitado(false);
+            vertice.setDistanciaDaOrigem(Integer.MAX_VALUE);
+        }
+
+        inicio.setDistanciaDaOrigem(0);
+        inicio.setAntecessor(null);
+
+        PriorityQueue<Vertice> filaDePrioridade = new PriorityQueue<>(
+                (v1, v2) -> Integer.compare(v1.getDistanciaDaOrigem(), v2.getDistanciaDaOrigem()));
+        filaDePrioridade.add(inicio);
+
+        while (!filaDePrioridade.isEmpty()) {
+            Vertice atual = filaDePrioridade.poll();
+
+            if (!atual.isVisitado()) {
+                if (atual.equals(fim)) {
+                    // Chegou ao destino
+                    break;
+                }
+                atual.setVisitado(true);
+
+                for (Aresta aresta : this.arestasIncidentes(atual)) {
+                    Vertice vizinho = aresta.getOposto(atual);
+                    if (!vizinho.isVisitado()) {
+                        int novaDistancia = atual.getDistanciaDaOrigem() + aresta.getValor();
+                        if (novaDistancia < vizinho.getDistanciaDaOrigem()) {
+                            vizinho.setDistanciaDaOrigem(novaDistancia);
+                            filaDePrioridade.add(vizinho);
+                            vizinho.setAntecessor(atual);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public List<Vertice> getCaminho(Vertice destino) {
+        if (destino.getDistanciaDaOrigem() == Integer.MAX_VALUE) {
+            System.out.println("Não há caminho até este destino.");
+            return null;
+        }
+
+        Vertice atual = destino;
+        List<Vertice> caminho = new ArrayList<>();
+
+        do {
+            caminho.add(atual);
+            atual = atual.getAntecessor();
+        } while (atual != null);
+
+        Collections.reverse(caminho);
+        return caminho;
     }
 
 }

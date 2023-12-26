@@ -76,4 +76,13 @@ public class Vertice {
     public void setAntecessor(Vertice caminhoAnterior) {
         this.antecessor = caminhoAnterior;
     }
+
+    public Aresta getArestaDoOposto(Vertice v) {
+        Aresta a = null;
+        for (Aresta aresta : arestas) {
+            if (aresta.getOposto(this) == v)
+                a = aresta;
+        }
+        return a;
+    }
 }
