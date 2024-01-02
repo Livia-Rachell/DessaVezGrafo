@@ -196,6 +196,10 @@ public class Grafo implements IGrafo {
         removeAresta(e);
 
         if (v.getArestas().size() == 0 || w.getArestas().size() == 0) {
+            this.arestas.add(e);
+            v.addAresta(e);
+            w.addAresta(e);
+            v.setArestas(arestasAntesDaRemocao);
             return false;
         }
 
@@ -204,7 +208,6 @@ public class Grafo implements IGrafo {
         this.arestas.add(e);
         v.addAresta(e);
         w.addAresta(e);
-
         v.setArestas(arestasAntesDaRemocao);
 
         return !aindaConectados;

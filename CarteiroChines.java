@@ -99,10 +99,10 @@ public class CarteiroChines {
                 Vertice oposto = it.next();
                 Aresta e = v.getArestaDoOposto(oposto);
 
-                arestasCircuito.add(e);
-                if (grafoAuxiliar.isPonte(e))
+                if (grafoAuxiliar.isPonte(e)) 
                     continue;
 
+                arestasCircuito.add(e);
                 grafoAuxiliar.removeAresta(e);
 
                 v = oposto;
