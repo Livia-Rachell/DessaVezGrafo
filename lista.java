@@ -1,9 +1,112 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
+
+public class CaixeiroViajante {
+    private Grafo garfoViajante;
+
+    public CaixeiroViajante(Grafo grafo) {
+        this.garfoViajante = grafo;
+    }
+
+    public void resolucao() throws Exception {
+        List<Vertice> verticesImpares = new ArrayList<Vertice>(verticesImpares(garfoViajante));
+        if (verticesImpares.size() % 2 == 0) {
+            eulerizar(garfoViajante, verticesImpares);
+            fleury(garfoViajante);
+        } else if (verticesImpares.size() == 0) {
+            System.out.println("O Grafo é Euleriano");
+            fleury(garfoViajante);
+        } else
+            throw new Exception("O Grafo não é Eulerizável, coleguinha!");
+    }
+
+    private List<Vertice> verticesImpares(Grafo garfoViajante) {
+        List<Vertice> vertices = garfoViajante.vertices();
+        int qtdVertices = vertices.size(); // numero de linhas da matriz;
+        List<Vertice> verticesImpares = new ArrayList<Vertice>();
+        int qtdArestas = 0;
+
+        for (int i = 0; i < qtdVertices; i++) {
+            qtdArestas = vertices.get(i).getArestas().size();
+            if (qtdArestas % 2 == 1) {
+                verticesImpares.add(vertices.get(i));
+            }
+        }
+        return verticesImpares;
+    }
+
+    private void eulerizar(Grafo garfoViajante, List<Vertice> verticesImpares) {
+        while (!verticesImpares.isEmpty()) {
+            int distancias[][] = matrizDistancias(garfoViajante, verticesImpares);
+            caminhoArtificial(distancias, garfoViajante, verticesImpares);
+        }
+    }
+
+    private List<Vertice> caminhoArtificial(int[][] distancias, Grafo grafoAuxiliar, List<Vertice> verticesImpares) {
+        int menorCaminho = Integer.MAX_VALUE;
+        Vertice v1 = null;
+        Vertice v2 = null;
+
+        for (int i = 0; i < verticesImpares.size(); i++) {
+            for (int j = 0; j < verticesImpares.size(); j++) {
+                if (distancias[i][j] != 0 && distancias[i][j] < menorCaminho) {
+                    menorCaminho = distancias[i][j];
+                    v1 = verticesImpares.get(i);
+                    v2 = verticesImpares.get(j);
+                }
+            }
+        }
+        grafoAuxiliar.dijkstra(v1, v2);
+        List<Vertice> caminho = new ArrayList<Vertice>(grafoAuxiliar.getCaminho(v2));
+        Collections.reverse(caminho);
+        for (int i = 0; i < caminho.size() - 1; i++) {
+            int valor = caminho.get(i).getArestaDoOposto(caminho.get(i + 1)).getValor();
+            grafoAuxiliar.inserirAresta(caminho.get(i), caminho.get(i + 1), valor);
+        }
+        verticesImpares.remove(v1);
+        verticesImpares.remove(v2);
+        return verticesImpares;
+    }
+
+    private void fleury(Grafo garfoViajante) {
+        Grafo grafoAuxiliar = garfoViajante;
+        Vertice v = grafoAuxiliar.vertices().get(0);
+        Stack<Vertice> pilha = new Stack<Vertice>();
+        List<Vertice> circuito = new ArrayList<Vertice>();
+        List<Aresta> circuites = new ArrayList<Aresta>();
+
+        pilha.push(v);
+        while (!pilha.isEmpty()) {
+            v = pilha.peek();
+            List<Vertice> adjacentes = v.getAdjacentes();
+
+            if (adjacentes.isEmpty()) {
+                circuito.add(v);
+                pilha.pop();
+            } else {
+                Vertice adjacente = adjacentes.get(0);
+                circuites.add(v.getArestaDoOposto(adjacente));
+                grafoAuxiliar.removeAresta(v.getArestaDoOposto(adjacente));
+                pilha.push(adjacente);
+            }
+        }
+
+        Collections.reverse(circuito);
+        for (int i = 0; i < circuito.size(); i++) {
+            System.out.println("Circuito Euleriano: " + circuito.get(i).getConteudo());
+        }
+        for (int i = 0; i < circuites.size(); i++) {
+            System.out.println("circuites Euleriano: " + circuites.get(i).getValor());
+        }
+    }
+}
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Queue;
 
 public class Grafo implements IGrafo {
     private List<Vertice> vertices;
@@ -187,53 +290,32 @@ public class Grafo implements IGrafo {
         return caminho;
     }
 
-    public boolean isPonte(Aresta e) {
-        Vertice v = e.getA();
-        Vertice w = e.getB();
+}
 
-        List<Aresta> arestasAntesDaRemocao = v.getArestas();
+public class MainCaixeiro {
+    public static void main(String[] args) {
+        Grafo grafo = new Grafo();
+        Vertice a = grafo.inserirVertice("a");
+        Vertice b = grafo.inserirVertice("b");
+        Vertice c = grafo.inserirVertice("c");
+        Vertice d = grafo.inserirVertice("d");
+        Vertice e = grafo.inserirVertice("e");
+        Vertice f = grafo.inserirVertice("f");
+        Aresta ab = grafo.inserirAresta(a, b, 10);
+        Aresta ae = grafo.inserirAresta(a, e, 8);
+        Aresta af = grafo.inserirAresta(a, f, 3);
+        Aresta bc = grafo.inserirAresta(b, c, 3);
+        Aresta bd = grafo.inserirAresta(b, d, 3);
+        Aresta be = grafo.inserirAresta(b, e, 2);
+        Aresta cd = grafo.inserirAresta(c, d, 7);
+        Aresta de = grafo.inserirAresta(d, e, 6);
+        Aresta ef = grafo.inserirAresta(e, f, 4);
 
-        removeAresta(e);
-
-        if (v.getArestas().size() == 0 || w.getArestas().size() == 0) {
-            return false;
-        }
-
-        boolean aindaConectados = existeCaminho(v, w);
-
-        this.arestas.add(e);
-        v.addAresta(e);
-        w.addAresta(e);
-
-        v.setArestas(arestasAntesDaRemocao);
-
-        return !aindaConectados;
-    }
-
-    private boolean existeCaminho(Vertice v, Vertice w) {
-        for (Vertice vertice : vertices) {
-            vertice.setVisitado(false);
-        }
-        dfs(v);
-        return w.isVisitado();
-    }
-
-    private void dfs(Vertice inicio) {
-        Queue<Vertice> fila = new LinkedList<>();
-        fila.add(inicio);
-        inicio.setVisitado(true);
-
-        while (!fila.isEmpty()) {
-            Vertice atual = fila.poll();
-
-            for (Aresta aresta : arestasIncidentes(atual)) {
-                Vertice vizinho = aresta.getOposto(atual);
-                if (!vizinho.isVisitado()) {
-                    vizinho.setVisitado(true);
-                    fila.add(vizinho);
-                }
-            }
+        try {
+            CaixeiroViajante caixeiroViajante = new CaixeiroViajante(grafo);
+            caixeiroViajante.resolucao();
+        } catch (Exception error) {
+            error.printStackTrace();
         }
     }
-
 }

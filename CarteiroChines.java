@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
@@ -86,32 +87,42 @@ public class CarteiroChines {
     private void fleury(Grafo grafoCarteiro) {
         Grafo grafoAuxiliar = grafoCarteiro;
         Vertice v = grafoAuxiliar.vertices().get(0);
-        Stack<Vertice> pilha = new Stack<Vertice>();
         List<Vertice> circuito = new ArrayList<Vertice>();
-        List<Aresta> circuites = new ArrayList<Aresta>();
+        List<Aresta> arestasCircuito = new ArrayList<Aresta>();
+        circuito.add(v);
 
-        pilha.push(v);
-        while (!pilha.isEmpty()) {
-            v = pilha.peek();
-            List<Vertice> adjacentes = v.getAdjacentes();
+        while (grafoAuxiliar.arestas().size() > 0) {
 
-            if (adjacentes.isEmpty()) {
+            Iterator<Vertice> it = v.getAdjacentes().iterator();
+
+            while (it.hasNext()) {
+                Vertice oposto = it.next();
+                Aresta e = v.getArestaDoOposto(oposto);
+
+                arestasCircuito.add(e);
+                if (grafoAuxiliar.isPonte(e))
+                    continue;
+
+                grafoAuxiliar.removeAresta(e);
+
+                v = oposto;
                 circuito.add(v);
-                pilha.pop();
-            } else {
-                Vertice adjacente = adjacentes.get(0);
-                circuites.add(v.getArestaDoOposto(adjacente));
-                grafoAuxiliar.removeAresta(v.getArestaDoOposto(adjacente));
-                pilha.push(adjacente);
+                break;
             }
+
         }
 
         Collections.reverse(circuito);
+        System.out.print("Circuito Euleriano: \n*");
         for (int i = 0; i < circuito.size(); i++) {
-            System.out.println("Circuito Euleriano: " + circuito.get(i).getConteudo());
+            System.out.print(" -> " + circuito.get(i).getConteudo());
         }
-        for (int i = 0; i < circuites.size(); i++) {
-            System.out.println("circuites Euleriano: " + circuites.get(i).getValor());
+        System.out.println();
+        System.out.print("Circuito Euleriano: \n*");
+        for (int i = 0; i < arestasCircuito.size(); i++) {
+            System.out.print(" -> " + arestasCircuito.get(i).getValor());
         }
+        System.out.println();
     }
+
 }

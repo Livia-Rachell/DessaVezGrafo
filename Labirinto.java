@@ -82,7 +82,7 @@ public class Labirinto {
         return saidas;
     }
 
-    public void dijkstra() {
+    public void dijkstra(Vertice inicio) {
         for (Vertice vertice : vertices) {
             vertice.setVisitado(false);
             vertice.setDistanciaDaOrigem(Integer.MAX_VALUE);
@@ -92,7 +92,7 @@ public class Labirinto {
 
         PriorityQueue<Vertice> filaDePrioridade = new PriorityQueue<>(
                 (v1, v2) -> Integer.compare(v1.getDistanciaDaOrigem(), v2.getDistanciaDaOrigem()));
-        filaDePrioridade.add(entrada);
+        filaDePrioridade.add(inicio != null ? inicio : entrada);
 
         while (!filaDePrioridade.isEmpty()) {
             Vertice atual = filaDePrioridade.poll();

@@ -78,11 +78,10 @@ public class Vertice {
     }
 
     public Aresta getArestaDoOposto(Vertice v) {
-        Aresta a = null;
         for (Aresta aresta : arestas) {
             if (aresta.getOposto(this) == v)
-                a = aresta;
+                return aresta;
         }
-        return a;
+        return null;
     }
 }
