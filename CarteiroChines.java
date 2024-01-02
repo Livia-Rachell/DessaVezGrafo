@@ -115,12 +115,12 @@ public class CarteiroChines {
         Collections.reverse(circuito);
         System.out.print("Circuito Euleriano: \n*");
         for (int i = 0; i < circuito.size(); i++) {
-            System.out.print(" -> " + circuito.get(i).getConteudo());
+            System.out.print(" - " + circuito.get(i).getConteudo());
         }
         System.out.println();
-        System.out.print("Circuito Euleriano: \n*");
+        System.out.print("\nCircuito Euleriano: \n*");
         for (int i = 0; i < arestasCircuito.size(); i++) {
-            System.out.print(" -> " + arestasCircuito.get(i).getValor());
+            System.out.print(" - " + arestasCircuito.get(i).getValor());
         }
         System.out.println();
     }
